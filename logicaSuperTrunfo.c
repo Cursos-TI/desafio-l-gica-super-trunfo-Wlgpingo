@@ -206,5 +206,129 @@ int main() {
     return 0;
 }
 
+#include <stdio.h>
+#include <string.h>
+
+// Estrutura da carta
+typedef struct {
+    char nome[50];
+    int populacao;
+    int area;
+    int densidade;
+    int pib;
+} Carta;
+
+// Função para mostrar os atributos disponíveis
+void mostrarAtributos(int ignorar) {
+    printf("Escolha um atributo:\n");
+    if (ignorar != 1) printf("1. População\n");
+    if (ignorar != 2) printf("2. Área\n");
+    if (ignorar != 3) printf("3. Densidade Demográfica (quanto menor, melhor)\n");
+    if (ignorar != 4) printf("4. PIB\n");
+}
+
+// Função para obter valor do atributo baseado na escolha
+int obterValor(Carta carta, int atributo) {
+    switch (atributo) {
+        case 1: return carta.populacao;
+        case 2: return carta.area;
+        case 3: return carta.densidade;
+        case 4: return carta.pib;
+        default: return -1;
+    }
+}
+
+// Função para mostrar o nome do atributo
+const char* nomeAtributo(int atributo) {
+    switch (atributo) {
+        case 1: return "População";
+        case 2: return "Área";
+        case 3: return "Densidade Demográfica";
+        case 4: return "PIB";
+        default: return "Desconhecido";
+    }
+}
+
+int main() {
+    // Cartas pré-definidas
+    Carta carta1 = {"Brasil", 213000000, 8515767, 25, 22000};
+    Carta carta2 = {"Canadá", 38000000, 9984670, 4, 18000};
+
+    int atributo1, atributo2;
+
+    // Escolha do primeiro atributo
+    do {
+        mostrarAtributos(0);
+        printf("Digite o número do primeiro atributo: ");
+        scanf("%d", &atributo1);
+        if (atributo1 < 1 || atributo1 > 4) {
+            printf("Opção inválida!\n");
+        }
+    } while (atributo1 < 1 || atributo1 > 4);
+
+    // Escolha do segundo atributo (diferente do primeiro)
+    do {
+        mostrarAtributos(atributo1);
+        printf("Digite o número do segundo atributo (diferente do primeiro): ");
+        scanf("%d", &atributo2);
+        if (atributo2 < 1 || atributo2 > 4 || atributo2 == atributo1) {
+            printf("Opção inválida!\n");
+        }
+    } while (atributo2 < 1 || atributo2 > 4 || atributo2 == atributo1);
+
+    // Valores dos atributos para cada carta
+    int val1_a1 = obterValor(carta1, atributo1);
+    int val2_a1 = obterValor(carta2, atributo1);
+
+    int val1_a2 = obterValor(carta1, atributo2);
+    int val2_a2 = obterValor(carta2, atributo2);
+
+    // Cálculo dos pontos por atributo
+    int pontos1 = 0, pontos2 = 0;
+
+    // Comparação do primeiro atributo
+    if (atributo1 == 3) {
+        pontos1 += val1_a1 < val2_a1 ? 1 : 0;
+        pontos2 += val2_a1 < val1_a1 ? 1 : 0;
+    } else {
+        pontos1 += val1_a1 > val2_a1 ? 1 : 0;
+        pontos2 += val2_a1 > val1_a1 ? 1 : 0;
+    }
+
+    // Comparação do segundo atributo
+    if (atributo2 == 3) {
+        pontos1 += val1_a2 < val2_a2 ? 1 : 0;
+        pontos2 += val2_a2 < val1_a2 ? 1 : 0;
+    } else {
+        pontos1 += val1_a2 > val2_a2 ? 1 : 0;
+        pontos2 += val2_a2 > val1_a2 ? 1 : 0;
+    }
+
+    // Soma total dos valores dos atributos
+    int soma1 = val1_a1 + val1_a2;
+    int soma2 = val2_a1 + val2_a2;
+
+    // Exibição dos resultados
+    printf("\n--- Resultado da Comparação ---\n");
+    printf("Carta 1: %s\n", carta1.nome);
+    printf("  %s: %d\n", nomeAtributo(atributo1), val1_a1);
+    printf("  %s: %d\n", nomeAtributo(atributo2), val1_a2);
+    printf("  Soma dos Atributos: %d\n\n", soma1);
+
+    printf("Carta 2: %s\n", carta2.nome);
+    printf("  %s: %d\n", nomeAtributo(atributo1), val2_a1);
+    printf("  %s: %d\n", nomeAtributo(atributo2), val2_a2);
+    printf("  Soma dos Atributos: %d\n\n", soma2);
+
+    // Resultado final
+    if (soma1 > soma2)
+        printf("Vencedor: %s!\n", carta1.nome);
+    else if (soma2 > soma1)
+        printf("Vencedor: %s!\n", carta2.nome);
+    else
+        printf("Empate!\n");
+
+    return 0;
+}
 
 
